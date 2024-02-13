@@ -1,0 +1,123 @@
+{% extends 'index.html' %}
+{% block content %}
+    <style>
+        form ul {
+            display: none;
+        }
+
+        form label {
+            display: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    <div class="container mx-auto px-[40px] text-[#051937]">
+        <div class="p-[20px] flex items-start gap-[10px] font-bold">
+            <a href="{% url 'service' %}"
+               class="border p-[10px] font-bold text-[#EF4D23] rounded-[15px] hover:border-[#EF4D23] visited:border-[#EF4D23]">Настройка
+                сервиса</a>
+            <a href="#"
+               class="border p-[10px] font-bold text-[#EF4D23] rounded-[15px] hover:border-[#EF4D23]">Настройка
+                сайта</a>
+            <a href="#"
+               class="border p-[10px] font-bold text-[#EF4D23] rounded-[15px] hover:border-[#EF4D23]">Настройки
+                работников</a>
+        </div>
+        <div class="border border-[#EF4D23]"
+        ></div>
+        <br>
+        <button data-btn="settingsServes" id="settingsServesBtn" type="button"
+                class="btn-open border p-[10px] font-bold text-[#EF4D23] rounded-[15px] hover:border-[#EF4D23]">
+            Новый сервис
+        </button>
+        <div data-id="settingsServes"
+             class='hidden settingsServes modal fixed top-0 left-0 flex justify-center items-center bg-black/[.35] w-[100vw] h-[100vh] z-[99]'
+             id="order{{ order.id }}">
+            <div class="bg-[#ffff] w-[500px] shadow-2xl rounded-[10px]">
+                <div class="flex justify-between py-[10px] px-[20px] border-b border-[#EF4D23] text-[#EF4D23]">
+                    <h3>Новый сервис:</h3>
+                    <select id="select" name="service" class="text-[#3d3d3d]">
+                        <option id="xizmat_turi" value="xizmat turi">Тип сервиса</option>
+                        <option id="xizmat" value="xizmat">Сервис</option>
+                    </select>
+                </div>
+                <form class="py-[20px] px-[20px] formModal" method="post" id="form">
+                    {% csrf_token %}
+                    <table class="w-full text-[#051937] ">
+                        <tbody class="w-100%">
+                        <tr class="w-96 hover:bg-gray-100 transition-colors group">
+                            <td class="py-4 px-4 text-start" id="label2">Название пакета:</td>
+                            <td class="hidden py-4 px-4 text-start" id="label">Название услуги:</td>
+                            <td class="py-4 px-4 text-start">{{ form.name }}</td>
+                        </tr>
+                        <tr class="hidden w-96 hover:bg-gray-100 transition-colors group" id="ldep">
+                            <td class="py-4 px-4 text-start">Отдел:</td>
+                            <td class="py-4 px-4 text-start">{{ form.department }}</td>
+                        </tr>
+                        <tr class="hidden w-96 hover:bg-gray-100 transition-colors group" id="lpar">
+                            <td class="py-4 px-4 text-start">пакета:</td>
+                            <td class="py-4 px-4 text-start">{{ form.parent }}</td>
+                            <div class="hidden" id="hidden-input">
+                            </div>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="flex mt-[20px] gap-[10px]">
+                        <button
+                                class=' ml-[12px] border bg-green-600 text-[#ffff] text-center rounded-[10px] p-[5px] hover:border hover:text-[#000] border-green-600 hover:bg-[#ffff]'
+                                type='submit'>Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        let select = document.getElementById('select')
+        let form = document.getElementById('form')
+        let label = document.getElementById('label')
+        let label2 = document.getElementById('label2')
+        let ldep = document.getElementById('ldep')
+        let lpar = document.getElementById('lpar')
+        let hiddenInput = document.getElementById('hidden-input')
+        form.id_department.style.display = 'none'
+        form.id_parent.style.display = 'none'
+
+        select.onchange = () => {
+            if (select.value === 'xizmat') {
+                hiddenInput.classList.remove('hidden')
+                label.classList.remove('hidden');
+                ldep.classList.remove('hidden')
+                lpar.classList.remove('hidden')
+                label2.classList.add('hidden')
+                form.id_department.style.display = 'block'
+                form.id_parent.style.display = 'block'
+
+            } else {
+                hiddenInput.classList.add('hidden')
+                label.classList.add('hidden')
+                label2.classList.remove('hidden')
+                ldep.classList.add('hidden')
+                lpar.classList.add('hidden')
+                form.id_department.style.display = 'none'
+                form.id_parent.style.display = 'none'
+
+            }
+
+        }
+
+        const l = document.querySelector('.settingsServes')
+        addEventListener('click', evt => {
+            if (evt.target.id === 'settingsServesBtn') {
+                l.classList.remove('hidden')
+            }
+            if (evt.target.id === 'order') {
+                l.classList.add('hidden')
+            }
+        })
+
+
+    </script>
+{% endblock %}

@@ -1,0 +1,194 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container mx-auto px-[40px] text-[#051937]">
+        <div class="p-[20px] flex items-center justify-between font-bold">
+            <div class="flex">
+                <h1 class='text-[25px]'>ВСЕ КЛИЕНТЫ</h1>
+                <span class='ml-[20px] text-[20px] text-white bg-[#EF4D23] py-[5px] px-[10px] rounded-[10px]'>{{ klients_count }}</span>
+            </div>
+            <button data-btn="clientCreat"
+                    class='btn-open border p-[10px] font-bold text-[#EF4D23] m-[10px] rounded-[15px] hover:border-[#EF4D23] cursor-pointer'>
+                + Добавить
+            </button>
+        </div>
+
+        <div class='flex justify-between'>
+            {% for status in statuses %}
+                <div class="flex flex-col w-[100%]">
+                    <div class="border-b-2 border-[#EF4D23] text-center p-[10px] font-bold">
+                        {{ status.name }}
+                    </div>
+                    {% for client in status.clients_set.all %}
+                        <div class=" border m-[10px] p-[10px] rounded-[15px] font-semibold text-[12px] flex flex-col">
+                            <div class="flex justify-between items-center gap-[8px]">
+                                {{ client.full_name }}
+                                <span id="client" data-id="{{ client.id }}" data-btn="clientInfo"
+                                      class="text-[20px] hover:text-[#EF4D23] cursor-pointer">:</span>
+                            </div>
+                            <h1 class="text-[#EF4D23]">{{ client.manager }}</h1>
+                            <a href="tel:+{{ client.phone }}" class='hover:text-[#EF4D23]'>+{{ client.phone }}</a>
+                        </div>
+                        {#                         Model edit star #}
+                        <div id="client_edit_modal{{ client.id }}"
+                             class='hidden clientModalEdit fixed top-0 left-0 flex justify-center items-center bg-black/[.54] w-[100vw] h-[100vh] z-[99]'>
+                            <div class="bg-[#ffff] w-[500px] shadow-2xl rounded-[10px]">
+                                <div class="py-[10px] px-[20px] border-b border-[#EF4D23] text-[#EF4D23]">
+                                    <h3>Информация:</h3>
+                                </div>
+                                <div class="py-[20px] px-[20px]">
+                                    <form action="" method="post" id="formModalEdit">
+                                        {% csrf_token %}
+                                        <table class="w-full text-[#051937] ">
+                                            <tbody class="w-100%">
+                                            <tr class="w-96 hover:bg-gray-100 transition-colors group">
+                                                <td class="py-4 px-4 text-start">Ф.И.О:</td>
+                                                <td class="py-4 px-4 text-start">
+                                                    <input class="hidden" type="text" name="id" value="{{ client.id }}">
+                                                    <input class="rounded border px-[5px]" name="full_name" type="text"
+                                                           value="{{ client.full_name }}">
+                                                </td>
+                                            </tr>
+                                            <tr class="w-96 hover:bg-gray-100 transition-colors group">
+                                                <td class="py-4 px-4 text-start">Номер телефона:</td>
+                                                <td class="py-4 px-4 text-start">
+                                                    <input class="rounded border px-[5px]" name="phone" type="tel"
+                                                           value="{{ client.phone }}">
+                                                </td>
+                                            </tr>
+                                            <tr class="w-96 hover:bg-gray-100 transition-colors group">
+                                                <td class="py-4 px-4 text-start">Адрес:</td>
+                                                <td class="py-4 px-4 text-start"><input class="rounded border px-[5px]"
+                                                                                        name="address" type="text"
+                                                                                        value="{{ client.address }}">
+                                                </td>
+                                            </tr>
+                                            <tr class="w-96 hover:bg-gray-100 transition-colors group">
+                                                <td class="py-4 px-4 text-start">Менеджер продаж:</td>
+                                                <td class="py-4 px-4 text-start">
+                                                    <select name="manager">
+                                                        <option hidden
+                                                                value="{{ client.manager.id }}">{{ client.manager }}</option>
+                                                        {% for u in users %}
+                                                            <option value="{{ u.id }}">{{ u }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr class="w-96 hover:bg-gray-100 transition-colors group">
+                                                <td class="py-4 px-4 text-start">Канал продаж:</td>
+                                                <td class="py-4 px-4 text-start">
+                                                    <input type="text" name="form" value="{{ client.form }}">
+                                                    <select>
+                                                        <option>{{ from }}</option>
+                                                    </select>
+                                                </td>
+
+                                            </tr>
+                                            <tr class="w-96 hover:bg-gray-100 transition-colors group">
+                                                <td class="py-4 px-4 text-start">День рождения:</td>
+                                                <td class="py-4 px-4 text-start">
+                                                    <input
+                                                            class="group-hover:bg-gray-100 transition-colors"
+                                                            name="birthday" type="date"
+                                                            value="{{ client.birthday }}">
+                                                </td>
+                                            </tr>
+                                            <tr class="w-96 hover:bg-gray-100 transition-colors group">
+                                                <td class="py-4 px-4 text-start">Воронка продаж:</td>
+                                                <td class="py-4 px-4 text-start">
+                                                    <input class="hidden" id='statusgloba' name="status" type="radio"
+                                                           value="{{ client.status.id }}" checked>
+                                                    <label class="hidden text-[#EF4D23]"
+                                                           for="statusgloba">{{ client.status }}</label>
+                                                    {% for s in statuses %}
+                                                        <input class="rounded border px-[5px]"
+                                                               id="status"
+                                                               name="status" type="radio"
+                                                               value="{{ s.id }}">
+                                                        <label for="status">{{ s.name }}</label>
+                                                    {% endfor %}
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="flex mt-[20px]">
+                                            <button
+                                                    class=' ml-[12px] border bg-green-600 text-[#ffff] text-center rounded-[10px] p-[5px] hover:border hover:text-[#000] border-green-600 hover:bg-[#ffff]'
+                                                    type='submit'>Сохранить
+                                            </button>
+                                            <a
+                                                    href="{% url 'clients_delete' client.pk %}"
+                                                    class=' ml-[12px] border bg-red-600 text-[#ffff] text-center rounded-[10px] p-[5px] hover:border hover:text-[#000] border-red-600 hover:bg-[#ffff]'
+                                                    type='submit'>Удалить
+                                            </a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        const dataClientForm = [
+            {'title': 'Ф.И.О:', 'form': `{{ form.full_name }}`},
+            {'title': 'Номер телефона:', 'form': `{{ form.phone }}`},
+            {'title': 'Адрес:', 'form': `{{ form.address }}`},
+            {'title': 'Менеджер продаж:', 'form': `{{ form.manager }}`},
+            {'title': 'Канал продаж:', 'form': `{{ form.form }}`},
+            {'title': 'День рождения:', 'form': `{{ form.birthday }}`},
+            {'title': 'Воронка продаж:', 'form': `{{ form.status }}`},
+        ]
+        const csrf = `{% csrf_token %}`
+
+        const dataClientInfo = [
+            {% for status in statuses %}
+                {% for client in status.clients_set.all %}
+                    {
+                        'id': {{ client.id }},
+                        'info': [
+                            {'name':'full_name','title': 'Ф.И.О:', 'typ': `{{ client.full_name }}`, 'input': 'data'},
+                            {'name':'phone','title': 'Номер телефона:', 'typ': `{{ client.phone }}`},
+                            {'name':'address','title': 'Адрес:', 'typ': `{{ client.address }}`},
+                            {'name':'manager','title': 'Менеджер продаж:', 'typ': `{{ client.manager }}`, 'input': 'checkbox'},
+                            {'name':'form','title': 'Канал продаж:', 'typ': `{{ client.form }}`},
+                            {'name':'status','title': 'Воронка продаж:', 'typ': `{{ client.status }}`},
+                            {'name':'birthday','title': 'День рождения:', 'typ': `{{ client.birthday|date:'Y-m-d' }}`,'input': 'date'},
+                            {'name':'creat_date','title': 'Дата добавления:', 'typ': `{{ client.creat_date|date:'Y-m-d h:m' }}`,'input': 'datetime-local', 'style':'hide'}
+                        ],
+                    },
+                {% endfor %}
+            {% endfor %}
+        ]
+
+    const dataClientEdit = [
+            {% for status in statuses %}
+                {% for client in status.clients_set.all %}
+                    {
+                        'id': {{ client.id }},
+                        'info': [
+                            {'name':'full_name','title': 'Ф.И.О:', 'typ': `{{ client.full_name }}`, 'input': 'data'},
+                            {'name':'phone','title': 'Номер телефона:', 'typ': `{{ client.phone }}`},
+                            {'name':'address','title': 'Адрес:', 'typ': `{{ client.address }}`},
+                            {'name':'form','title': 'Канал продаж:', 'typ': `{{ client.form }}`},
+                            {'name':'birthday','title': 'День рождения:', 'typ': `{{ client.birthday|date:'Y-m-d' }}`,'input': 'date'},
+                        ],
+                        'status': [
+                            {'id': `{{ status.id }}`,'name':'status','title': 'Воронка продаж:', 'typ': `{{ client.status }}`},
+                        ],
+                        'form': [
+                            {'id': `{{ client.form }}`,'name':'form','title': 'Канал продаж:', 'typ': `{{ client.form }}`},
+                        ],
+                    },
+                {% endfor %}
+            {% endfor %}
+        ]
+        console.log(dataClientEdit)
+    </script>
+{% endblock %}

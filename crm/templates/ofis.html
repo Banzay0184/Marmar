@@ -1,0 +1,301 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+    {#    <style>#}
+    {#        form ul {#}
+    {#            display: none;#}
+    {#        }#}
+    {#    </style>#}
+    {#    <section class="ofis">#}
+    {#        <div class="clients-header">#}
+    {#            <button type="button" id="myBtn" class="btn-clients">Новый проект</button>#}
+    {#            <a href="" type="button" class="btn-archive">Архив</a>#}
+    {#            <div id="myModal" class="modal">#}
+    {##}
+    {#                <!-- Modal content -->#}
+    {#                <div class="modal-content">#}
+    {#                    <span class="close">&times;</span>#}
+    {#                    <form action="" class="forms-clients" method="post">#}
+    {#                        {% csrf_token %}#}
+    {#                        {{ form }}#}
+    {#                        <button class="btn-form-clients" type="submit">Добавить</button>#}
+    {#                    </form>#}
+    {#                </div>#}
+    {##}
+    {##}
+    {#            </div>#}
+    {#        </div>#}
+    {#        <div class="">#}
+    {#            <table class="table-clients">#}
+    {#                <tr>#}
+    {#                    <th>№</th>#}
+    {#                    <th>Номер заказа</th>#}
+    {#                    <th>Название проекта</th>#}
+    {#                    <th>Клиент</th>#}
+    {#                    <th>Статус оплаты</th>#}
+    {#                    <th>сатрудник</th>#}
+    {#                </tr>#}
+    {#                {% for order in orders %}#}
+    {#                    {% if not order.is_archive %}#}
+    {#                        <tr>#}
+    {#                            <td>{{ forloop.counter }}</td>#}
+    {#                            <td>{{ order.order_number }}</td>#}
+    {#                            <td>{{ order.title }}</td>#}
+    {#                            <td><a href="tel:+998904140184">{{ order.client }}</a></td>#}
+    {#                            <td>{{ order.status }}</td>#}
+    {#                            <td>#}
+    {#                                {% for user in order.user.all %}#}
+    {#                                    {{ user.username }}<br/>#}
+    {#                                {% endfor %}#}
+    {#                            </td>#}
+    {#                            <td>#}
+    {#                                <a href="{% url 'department' order.pk %}" class="">#}
+    {#                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"#}
+    {#                                     width="40" height="40"#}
+    {#                                     viewBox="0 0 50 50"#}
+    {#                                     style=" fill:#000000;">#}
+    {#                                    <path d="M 28.90625 1.96875 C 28.863281 1.976563 28.820313 1.988281 28.78125 2 L 11.5 2 C 9.585938 2 8 3.558594 8 5.46875 L 8 43.90625 C 8 46.160156 9.867188 48 12.125 48 L 37.875 48 C 40.132813 48 42 46.160156 42 43.90625 L 42 15.1875 C 42.027344 15.054688 42.027344 14.914063 42 14.78125 L 42 14.5 C 42.007813 14.234375 41.90625 13.972656 41.71875 13.78125 L 30.21875 2.28125 C 30.027344 2.09375 29.765625 1.992188 29.5 2 L 29.1875 2 C 29.097656 1.976563 29 1.964844 28.90625 1.96875 Z M 11.5 4 L 28 4 L 28 12.34375 C 28 14.355469 29.644531 16 31.65625 16 L 40 16 L 40 43.90625 C 40 45.074219 39.054688 46 37.875 46 L 12.125 46 C 10.945313 46 10 45.074219 10 43.90625 L 10 5.46875 C 10 4.644531 10.660156 4 11.5 4 Z M 30 4.9375 L 39.0625 14 L 31.65625 14 C 30.722656 14 30 13.277344 30 12.34375 Z M 17 24 L 17 26 L 33 26 L 33 24 Z M 17 28 L 17 30 L 33 30 L 33 28 Z M 17 32 L 17 34 L 33 34 L 33 32 Z M 17 36 L 17 38 L 26 38 L 26 36 Z"></path>#}
+    {#                                </svg>#}
+    {#                            </a>#}
+    {#                            </td>#}
+    {#                            <td>#}
+    {#                                <a type="button" class="clients-edit" id="Editbtn"#}
+    {#                                   href="{% url 'edit_offic_pk' order.pk %}"><img#}
+    {#                                        src="{% static 'img/edit.svg' %}" alt=""></a>#}
+    {#                            </td>#}
+    {#                            <td>#}
+    {#                                <a href="{% url 'order_archived' order.pk %}" type="button">#}
+    {#                                    <img#}
+    {#                                            src="{% static 'img/icon-archive.svg' %}"#}
+    {#                                            alt="" width="30">#}
+    {#                                </a>#}
+    {#                            </td>#}
+    {#                        </tr>#}
+    {#                    {% endif %}#}
+    {##}
+    {#                {% endfor %}#}
+    {#            </table>#}
+    {#        </div>#}
+    {#    </section>#}
+
+
+    <div class="container mx-auto px-[40px] text-[#051937]">
+        <div class="p-[20px] flex items-center justify-between font-bold">
+            <div class="flex">
+                <h1 class='text-[25px]'>Все проекты</h1>
+                <span class='ml-[20px] text-[20px] text-white bg-[#EF4D23] py-[5px] px-[10px] rounded-[10px]'>{{ order_count }}</span>
+            </div>
+            <div class="flex gap-[20px]">
+                <button type="button" data-btn="projectCreat"
+                        class=" btn-open border p-[10px] font-bold text-[#EF4D23] rounded-[15px] hover:border-[#EF4D23]">
+                    Новый
+                    проект
+                </button>
+                <a href="{% url 'archive' %}"
+                   class="border p-[10px] font-bold text-[#EF4D23] rounded-[15px] hover:border-[#EF4D23]">Архив</a>
+            </div>
+        </div>
+        <table class="w-full text-[#051937] ">
+            <thead>
+            <tr>
+                <th class="py-4 px-4 text-start">№</th>
+                <th class="py-4 px-4 text-start">Номер заказа</th>
+                <th class="py-4 px-4 text-start">Название проекта</th>
+                <th class="py-4 px-4 text-start">Клиент</th>
+                <th class="py-4 px-4 text-start">Статус оплаты</th>
+                <th class="py-4 px-4 text-start">сатрудник</th>
+                <th class="py-4 px-4 text-start">Прочие инструменты</th>
+            </tr>
+            </thead>
+            <tbody class="w-100%">
+            {% for order in orders %}
+                {% if not order.is_archive %}
+                    <tr class="w-96 hover:bg-gray-100 transition-colors group">
+                        <td class="py-4 px-4 text-start">{{ forloop.counter }}</td>
+                        <td class="py-4 px-4 text-start">{{ order.order_number }}</td>
+                        <td class="py-4 px-4 text-start">{{ order.title }}</td>
+                        <td class="py-4 px-4 text-start">{{ order.client }}</td>
+                        <td class="py-4 px-4 text-start">{{ order.status }}</td>
+                        <td class="py-4 px-4 text-start">{% for user in order.user.all %}
+                            {{ user.username }}<br/>
+                        {% endfor %}</td>
+                        <td class="flex py-4 px-4 text-start items-center">
+                            <a href="{% url 'department' order.pk %}" class="fill-[#00000] hover:fill-[#EF4D23]">
+                                <svg x="0px" y="0px"
+                                     width="40" height="40"
+                                     viewBox="0 0 50 50"
+                                     style="">
+                                    <path d="M 28.90625 1.96875 C 28.863281 1.976563 28.820313 1.988281 28.78125 2 L 11.5 2 C 9.585938 2 8 3.558594 8 5.46875 L 8 43.90625 C 8 46.160156 9.867188 48 12.125 48 L 37.875 48 C 40.132813 48 42 46.160156 42 43.90625 L 42 15.1875 C 42.027344 15.054688 42.027344 14.914063 42 14.78125 L 42 14.5 C 42.007813 14.234375 41.90625 13.972656 41.71875 13.78125 L 30.21875 2.28125 C 30.027344 2.09375 29.765625 1.992188 29.5 2 L 29.1875 2 C 29.097656 1.976563 29 1.964844 28.90625 1.96875 Z M 11.5 4 L 28 4 L 28 12.34375 C 28 14.355469 29.644531 16 31.65625 16 L 40 16 L 40 43.90625 C 40 45.074219 39.054688 46 37.875 46 L 12.125 46 C 10.945313 46 10 45.074219 10 43.90625 L 10 5.46875 C 10 4.644531 10.660156 4 11.5 4 Z M 30 4.9375 L 39.0625 14 L 31.65625 14 C 30.722656 14 30 13.277344 30 12.34375 Z M 17 24 L 17 26 L 33 26 L 33 24 Z M 17 28 L 17 30 L 33 30 L 33 28 Z M 17 32 L 17 34 L 33 34 L 33 32 Z M 17 36 L 17 38 L 26 38 L 26 36 Z"></path>
+                                </svg>
+                            </a>
+                            <div class="cursor-pointer"
+                                 id="{{ order.id }}" data-btn="projectEdit" data-id="{{ order.id }}">
+                                <svg data-btn="projectEdit" data-id="{{ order.id }}"
+                                     class="stroke-[#000000] hover:stroke-[#EF4D23]" width="45px"
+                                     height="45px" viewBox="0 0 24 24" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"
+                                       stroke="" stroke-width="0.096"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path data-btn="projectEdit" data-id="{{ order.id }}"
+                                              d="M12 3.99997H6C4.89543 3.99997 4 4.8954 4 5.99997V18C4 19.1045 4.89543 20 6 20H18C19.1046 20 20 19.1045 20 18V12M18.4142 8.41417L19.5 7.32842C20.281 6.54737 20.281 5.28104 19.5 4.5C18.7189 3.71895 17.4526 3.71895 16.6715 4.50001L15.5858 5.58575M18.4142 8.41417L12.3779 14.4505C12.0987 14.7297 11.7431 14.9201 11.356 14.9975L8.41422 15.5858L9.00257 12.6441C9.08001 12.2569 9.27032 11.9013 9.54951 11.6221L15.5858 5.58575M18.4142 8.41417L15.5858 5.58575"
+                                              stroke-width="1.056" stroke-linecap="round"
+                                              stroke-linejoin="round"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            <a href="{% url 'order_archived' order.pk %}">
+                                <?xml version="1.0" ?>
+                                <svg viewBox="0 0 32 32" width="40" height="40" xmlns="http://www.w3.org/2000/svg"
+                                     class="fill-[#000000] hover:fill-[#EF4D23]">
+                                    <g data-name="Layer 39" id="Layer_39">
+                                        <path class="cls-1"
+                                              d="M4,28a3,3,0,0,1-3-3V7A3,3,0,0,1,4,4h7a1,1,0,0,1,.77.36L14.8,8H27a1,1,0,0,1,0,2H14.33a1,1,0,0,1-.76-.36L10.53,6H4A1,1,0,0,0,3,7V25a1,1,0,0,0,1,1,1,1,0,0,1,0,2Z"/>
+                                        <path class="cls-1"
+                                              d="M25.38,28H4a1,1,0,0,1-1-1.21l3-14A1,1,0,0,1,7,12H30a1,1,0,0,1,1,1.21L28.32,25.63A3,3,0,0,1,25.38,28ZM5.24,26H25.38a1,1,0,0,0,1-.79L28.76,14h-21Z"/>
+                                    </g>
+                                </svg>
+                            </a>
+                            {#                            <div class="cursor-pointer"#}
+                            {#                                 id="orderDelBtn" data-id="{{ order.id }}"#}
+                            {#                            >#}
+                            {#                                <?xml version="1.0" ?>#}
+                            {#                                <svg class="stroke-[#C40000] m-[-10px] hover:stroke-[#3d3d3d]" fill="none" height="52"#}
+                            {#                                     viewBox="0 0 24 24" width="52"#}
+                            {#                                     xmlns="http://www.w3.org/2000/svg">#}
+                            {#                                    <path d="M4.99997 8H6.5M6.5 8V18C6.5 19.1046 7.39543 20 8.5 20H15.5C16.6046 20 17.5 19.1046 17.5 18V8M6.5 8H17.5M17.5 8H19M9 5H15M9.99997 11.5V16.5M14 11.5V16.5"#}
+                            {#                                          stroke-linecap="round" stroke-linejoin="round"/>#}
+                            {#                                </svg>#}
+                            {#                            </div>#}
+                        </td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {#Modal Edit Project#}
+    {% for order in orders %}
+        <div class='hidden orderModal fixed top-0 left-0 flex justify-center items-center bg-black/[.35] w-[100vw] h-[100vh] z-[99]'
+             id="order{{ order.id }}">
+            <div class="bg-[#ffff] w-[500px] shadow-2xl rounded-[10px]">
+                <div class="py-[10px] px-[20px] border-b border-[#EF4D23] text-[#EF4D23]">
+                    <h3>Новый проект:</h3>
+                </div>
+                <form class="py-[20px] px-[20px]" method="post">
+                    {% csrf_token %}
+                    <table class="w-full text-[#051937] ">
+                        <tbody class="w-100%">
+                        <tr class="w-96 hover:bg-gray-100 transition-colors group">
+                            <td class="py-4 px-4 text-start">Ф.И.О:</td>
+                            <td class="py-4 px-4 text-start">
+                                <input class="rounded border px-[5px]" name="full_name" type="text"
+                                       value="{{ order.order_number }}">
+                            </td>
+                        </tr>
+                        <tr class="w-96 hover:bg-gray-100 transition-colors group">
+                            <td class="py-4 px-4 text-start">Ф.И.О:</td>
+                            <td class="py-4 px-4 text-start">
+                                <input class="rounded border px-[5px]" name="full_name" type="text"
+                                       value="{{ order.order_number }}">
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="flex mt-[20px] gap-[10px]">
+                        <button
+                                class=' ml-[12px] border bg-green-600 text-[#ffff] text-center rounded-[10px] p-[5px] hover:border hover:text-[#000] border-green-600 hover:bg-[#ffff]'
+                                type='submit'>Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+    {#Modal Del#}
+    <div class='hidden orderDelModal fixed top-0 left-0 flex justify-center items-center bg-black/[.35] w-[100vw] h-[100vh] z-[99]'
+         id="orderDel{{ order.id }}">
+        <div class="bg-[#ffff] w-[500px] shadow-2xl rounded-[10px]">
+            <div class="py-[10px] px-[20px] border-b border-[#EF4D23] text-[#EF4D23]">
+                <h3>Новый проект:</h3>
+            </div>
+            <form class="py-[20px] px-[20px]" method="post">
+                {% csrf_token %}
+                <div class="flex mt-[20px] gap-[10px]">
+                    <a href=""
+                       class=' ml-[12px] border bg-green-600 text-[#ffff] text-center rounded-[10px] p-[5px] hover:border hover:text-[#000] border-green-600 hover:bg-[#ffff]'>
+
+                    </a>
+                    <button
+                            class=' ml-[12px] border bg-green-600 text-[#ffff] text-center rounded-[10px] p-[5px] hover:border hover:text-[#000] border-green-600 hover:bg-[#ffff]'
+                            type='submit'>Сохранить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        const csrf = `{% csrf_token %}`
+        const dataFormProject = [
+            {'title': 'Сотрудники:', 'form': `{{ form.user }}`},
+            {'title': 'Услуга:', 'form': `{{ form.service }}`},
+            {'title': 'Статус оплаты:', 'form': `{{ form.status }}`},
+            {'title': 'Сумма проекта:', 'form': `{{ form.numbers }}`},
+            {'title': 'Имя клиента:', 'form': `{{ form.client }}`},
+            {'title': 'Название проекта:', 'form': `{{ form.title }}`},
+            {'title': 'Номер заказа:', 'form': `{{ form.order_number }}`},
+        ]
+
+        const dataFormEdit = [
+            {% for order in orders %}
+                {
+                    'id':  {{ order.id }},
+                    'info': [
+                        {#{'title': 'Сотрудники:', 'input': ``},#}
+                        {#{'title': 'Услуга:', 'form': `{{ form.service }}`},#}
+                        {#{'title': 'Статус оплаты:', 'form': `{{ form.status }}`},#}
+                        {'title': 'Сумма проекта:', 'name':'numbers', 'form': `{{ form.numbers }}`, 'value': '{{ order.numbers }}'},
+                        {#{'title': 'Имя клиента:', 'form': `{{ form.client }}`},#}
+                        {'title': 'Название проекта:','name':'title', 'form': `{{ form.title }}`, 'value': '{{ order.title }}'},
+                        {'title': 'Номер заказа:', 'name':'order_number', 'form': `{{ form.order_number }}`,'value': '{{ order.order_number }}'},
+                    ],
+                    'select': [
+                        {
+                            'id':`{{ order.client.id }}`,'title': 'Имя клиента:', 'value': [
+                                {% for client in client_edit %}
+                                    {'id':`{{ client.id }}`,'name': `{{ client }}`},
+                                {% endfor %}
+                            ]
+                        }
+                    ],
+                    'checkbox': [
+                        {% for user in user_edit %}
+                            {'title': 'Сотрудник', 'id': `{{ user.id }}`, 'value': `{{ user.username }}`},
+                        {% endfor %}
+                    ],
+                    'usertrue': [
+                        {% for us in order.user.all %}
+                            {'username': `{{ us.username }}`},
+                        {% endfor %}
+                    ],
+                    'service': [
+                        {% for service in service_edit %}
+                            {'title': 'Услуга', 'id': `{{ service.id }}`, 'value': `{{ service.name }}`},
+                        {% endfor %}
+                    ],
+                    'servicetrue': [
+                        {% for us in order.service.all %}
+                            {'username': `{{ us.id }}`},
+                        {% endfor %}
+                    ],
+                },
+            {% endfor %}
+
+        ]
+        console.log(dataFormEdit)
+    </script>
+{% endblock %}

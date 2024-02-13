@@ -1,0 +1,167 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block content %}
+    <section class="container mx-auto px-[40px] py-[40px]">
+        <div class="flex gap-[12px]">
+            <div class="flex gap-[4px] items-center">
+                <span>Номер проекта: </span>
+                <h1 class="font-[700] text-[#EF4D23]"> {{ orders.order_number }}</h1>
+            </div>
+            <div class="flex gap-[4px] items-center">
+                <span>Название проекта: </span>
+                <h1 class="font-[700] text-[#EF4D23]"> {{ orders.title }}</h1>
+            </div>
+            <div class="flex gap-[4px] items-center">
+                <span>Общая сумма проекта: </span>
+                <h1 class="font-[700] text-[#EF4D23]"> {{ orders.numbers }} $</h1>
+            </div>
+        </div>
+
+        <table class="w-full text-[#051937]">
+            <thead class="w-100% ">
+            <tr class="w-96 hover:bg-gray-100 transition-colors group">
+                <th class="py-4 px-4 text-start">Услуга</th>
+                <th class="py-4 px-4 text-start">Foiz ulushi</th>
+                <th class="py-4 px-4 text-start">Сумма</th>
+                <th class="py-4 px-4 text-start">tugatilganligi</th>
+                <th class="py-4 px-4 text-start">ishchi</th>
+            </tr>
+            </thead>
+            <tbody class="w-100% ">
+            {% for projectservice in projectservices %}
+                <tr class="w-96 hover:bg-gray-100 transition-colors group">
+                    <td class="py-4 px-4 text-start">{{ projectservice.service.name }}</td>
+                    <td class="py-4 px-4 text-start">{{ projectservice.parcent }} %
+                    </td>
+                    <td class="py-4 px-4 text-start">{{ projectservice.total_prince }}</td>
+                    <td class="py-4 px-4 text-start flex gap-[16px] items-center">
+                        {{ projectservice.max_parcent }} %
+                        <button class="font-[500] hover:text-[#EF4D23]" data-btn="projectDocumentEdit"
+                                data-id="{{ projectservice.id }}">изменить
+                        </button>
+                    </td>
+                    <td class="py-4 px-4 text-start">
+                        {% for user in projectservice.user.all %}
+                            {{ user }},
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="flex gap-[12px]">
+            <div class="flex gap-[4px] items-center">
+                <span>Общий процент работы: </span>
+                <h1 class="font-[700] text-[#EF4D23]"> {{ result_parcent }} %</h1>
+            </div>
+            <div class="flex gap-[4px] items-center">
+                <span>Общая сумма зарплаты: </span>
+                <h1 class="font-[700] text-[#EF4D23]"> {{ reuslt_sum }} $</h1>
+            </div>
+            <div class="flex gap-[4px] items-center">
+                <span>Общий процент законченный работы: </span>
+                <h1 class="font-[700] text-[#EF4D23]"> {{ sum_percent }} %</h1>
+            </div>
+
+        </div>
+        <div class="w-[100%] h-[2px] bg-[#EF4D23] my-[12px]"></div>
+        <div class="flex items-center justify-between">
+            <h1 class="text-[24px]">Документы</h1>
+            <button data-btn="projectDocumentCreat" type="button" id="myBtn"
+                    class="btn-open border p-[10px] font-bold text-[#EF4D23] m-[10px] rounded-[15px] hover:border-[#EF4D23] cursor-pointer">
+                Добавить документ
+            </button>
+        </div>
+        <div style="display: flex; padding: 10px;flex-wrap: nowrap;flex-direction: column;">
+            {% for field in order_fields %}
+                <div class="hover:bg-gray-100 transition-colors group"
+                     style="display: flex;align-items: center; padding: 10px 0 10px 0">
+                    <a class="cursor-pointer" href="/media/{{ field.field }}" download>
+                        <svg class="fill-[#EF4D23] hover:fill-[#000]" xmlns="http://www.w3.org/2000/svg" width="32px"
+                             height="32px" viewBox="0 0 24 24"
+                        >
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+
+                            <g id="SVGRepo_iconCarrier">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                      d="M12 15.9853L15.182 12.8033L14.1213 11.7427L12.75 13.114L12.75 5.25L11.25 5.25L11.25 13.114L9.8787 11.7427L8.81804 12.8033L12 15.9853ZM12 13.864L12 13.864L12.0001 13.864L12 13.864Z"
+                                />
+                                <path d="M18 17.25L18 18.75L6 18.75L6 17.25L18 17.25Z"/>
+                            </g>
+                        </svg>
+                        {{ field.fields }}
+                    </a>
+                    <svg id="{{ field.id }}" class="cursor-pointer fill-[#EF4D23] hover:fill-[#000]" width="32px"
+                         height="32px" viewBox="0 0 24 24" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path id="{{ field.id }}" fill-rule="evenodd" clip-rule="evenodd"
+                                  d="M12.0001 5.25C9.22586 5.25 6.79699 6.91121 5.12801 8.44832C4.28012 9.22922 3.59626 10.0078 3.12442 10.5906C2.88804 10.8825 2.70368 11.1268 2.57736 11.2997C2.51417 11.3862 2.46542 11.4549 2.43187 11.5029C2.41509 11.5269 2.4021 11.5457 2.393 11.559L2.38227 11.5747L2.37911 11.5794L2.10547 12.0132L2.37809 12.4191L2.37911 12.4206L2.38227 12.4253L2.393 12.441C2.4021 12.4543 2.41509 12.4731 2.43187 12.4971C2.46542 12.5451 2.51417 12.6138 2.57736 12.7003C2.70368 12.8732 2.88804 13.1175 3.12442 13.4094C3.59626 13.9922 4.28012 14.7708 5.12801 15.5517C6.79699 17.0888 9.22586 18.75 12.0001 18.75C14.7743 18.75 17.2031 17.0888 18.8721 15.5517C19.72 14.7708 20.4039 13.9922 20.8757 13.4094C21.1121 13.1175 21.2964 12.8732 21.4228 12.7003C21.4859 12.6138 21.5347 12.5451 21.5682 12.4971C21.585 12.4731 21.598 12.4543 21.6071 12.441L21.6178 12.4253L21.621 12.4206L21.6224 12.4186L21.9035 12L21.622 11.5809L21.621 11.5794L21.6178 11.5747L21.6071 11.559C21.598 11.5457 21.585 11.5269 21.5682 11.5029C21.5347 11.4549 21.4859 11.3862 21.4228 11.2997C21.2964 11.1268 21.1121 10.8825 20.8757 10.5906C20.4039 10.0078 19.72 9.22922 18.8721 8.44832C17.2031 6.91121 14.7743 5.25 12.0001 5.25ZM4.29022 12.4656C4.14684 12.2885 4.02478 12.1311 3.92575 12C4.02478 11.8689 4.14684 11.7115 4.29022 11.5344C4.72924 10.9922 5.36339 10.2708 6.14419 9.55168C7.73256 8.08879 9.80369 6.75 12.0001 6.75C14.1964 6.75 16.2676 8.08879 17.8559 9.55168C18.6367 10.2708 19.2709 10.9922 19.7099 11.5344C19.8533 11.7115 19.9753 11.8689 20.0744 12C19.9753 12.1311 19.8533 12.2885 19.7099 12.4656C19.2709 13.0078 18.6367 13.7292 17.8559 14.4483C16.2676 15.9112 14.1964 17.25 12.0001 17.25C9.80369 17.25 7.73256 15.9112 6.14419 14.4483C5.36339 13.7292 4.72924 13.0078 4.29022 12.4656ZM14.25 12C14.25 13.2426 13.2427 14.25 12 14.25C10.7574 14.25 9.75005 13.2426 9.75005 12C9.75005 10.7574 10.7574 9.75 12 9.75C13.2427 9.75 14.25 10.7574 14.25 12ZM15.75 12C15.75 14.0711 14.0711 15.75 12 15.75C9.92898 15.75 8.25005 14.0711 8.25005 12C8.25005 9.92893 9.92898 8.25 12 8.25C14.0711 8.25 15.75 9.92893 15.75 12Z"
+                            ></path>
+                        </g>
+                    </svg>
+
+                    <div id="{{ field.id }}" data-filed-id="{{ field.id }}" class="hide img-file">
+                        <img class="" src="{{ field.field.url }}" alt="">
+                    </div>
+                    <span style="font-size: 18px; padding: 0 10px 0 10px;">{{ field.title }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <script>
+        const la = document.querySelectorAll('[data-filed-id]')
+        la.forEach(i => {
+            document.addEventListener('click', ev => {
+                if (ev.target.id === i.id) {
+                    i.classList.remove('hide')
+                }
+                if (ev.target.className === 'img-file') {
+                    i.classList.add('hide')
+                }
+            })
+        })
+
+        const csrf = `{% csrf_token %}`
+
+        const dataDocumentForm = [
+            {'title': 'Название файла:', 'form': `{{ form.title }}`},
+            {'title': 'Файла:', 'form': `{{ form.field }}`},
+        ]
+
+        const dataPro = [
+            {% for projectservice in projectservices %}
+                {
+                    'id': {{ projectservice.id }},
+                    'info': [
+                        {
+                            'title': 'Процент сотрудника',
+                            'input': 'number',
+                            'value': `{{ projectservice.parcent }}`,
+                            'title2': 'Сумма сотрудника',
+                            'input2': 'number',
+                            'value2': `{{ projectservice.max_parcent }}`,
+                        },
+                    ],
+                    'select': [
+                        {% for user in projectservice.order.user.all %}
+                            {'title': 'Сотрудник', 'id': `{{ user.id }}`, 'value': `{{ user.username }}`},
+                        {% endfor %}
+                    ],
+                    'usertrue': [
+                        {% for us in projectservice.user.all %}
+                            {'username': `{{ us.username }}`},
+                        {% endfor %}
+                    ]
+                },
+            {% endfor %}
+        ]
+        console.log(dataPro)
+    </script>
+{% endblock %}
